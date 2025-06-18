@@ -81,6 +81,9 @@ class PredictiveSampling(SamplingBase):
 
         self.candidate_controls = np.concatenate([base_controls, noised_controls])
 
+        # Store per-rollout control viapoints for logging
+        self.rollout_viapoints = self.candidate_controls.copy()  # shape: (num_rollouts, num_nodes, nu)
+
         # Clamp controls to action bounds.
         self.candidate_controls = np.clip(
             self.candidate_controls,
