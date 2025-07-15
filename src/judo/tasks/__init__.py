@@ -8,12 +8,14 @@ from judo.tasks.cylinder_push import (
     CylinderPush,
     CylinderPushConfig,
 )
+from judo.tasks.push_t import PushT, PushTConfig
 from judo.tasks.task import Task, TaskConfig
 
 _registered_tasks: Dict[str, Tuple[Type[Task], Type[TaskConfig]]] = {
     "acrobot": (Acrobot, AcrobotConfig),
     "cylinder_push": (CylinderPush, CylinderPushConfig),
     "cartpole": (Cartpole, CartpoleConfig),
+    "push_t": (PushT, PushTConfig),
 }
 
 

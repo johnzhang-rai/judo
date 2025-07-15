@@ -1,0 +1,56 @@
+<mujoco>
+    <option timestep="0.01" integrator="implicitfast"/>
+    <statistic center="0 0 0" extent="0.9"/>
+    <default>
+        <default class="slider">
+            <position kp="2" ctrlrange="-10 10" forcerange="-1000 1000"/>
+        </default>
+        <default class="goal">
+            <geom conaffinity="0" contype="0" rgba="0 1 0 0.2"/>
+        </default>
+        <!-- <geom friction="1.0" solimp="0.0 0.95 0.005" solref="0.02 1"/> -->
+    </default>
+    <visual>
+        <headlight ambient="0.4 0.4 0.4" diffuse="0.8 0.8 0.8" specular="0.1 0.1 0.1"/>
+        <map znear="0.01"/>
+    </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+  </asset>
+    <worldbody>
+        <geom name="ground" type="plane" material="groundplane" size="10 10 0.1" friction="0.25 0.0005 0.0001"/>
+        <!-- friction="1. 0.0005 0.0001" -->
+        <body name="pusher" pos="0. 0. 0.011">
+            <joint name="slider_x" damping="10" type="slide" axis="1 0 0" />
+            <joint name="slider_y" damping="10" type="slide" axis="0 1 0" />
+            <!-- <geom name="pusher" type="sphere" size=".01" rgba="1 0 0 1" /> -->
+            <geom name="pusher" type="cylinder" size="0.015 0.01" mass="1" rgba="1 0 0 1" friction="0.5 0.0005 0.0001"/>
+            <site pos="0 0 0" name="trace_pusher"/>
+        </body>
+        <body name="block" pos="0.0 0.0 0.0095">
+            <joint name="T_x" type="slide" axis="1 0 0"/>
+            <joint name="T_y" type="slide" axis="0 1 0"/>
+            <joint name="T_z" type="slide" axis="0 0 1"/>
+            <joint name="T_rot" type="hinge" damping="0.0" axis="0 0 1"/>
+            <geom name="bottom" type="box" pos="0 -0.03 0" size=".015 0.045 0.01" rgba="0.7 0.7 0.7 0.9" mass="0.1"/>
+            <geom name="top" type="box" pos="0.0 0.03 0.0" size=".06 0.015 0.01" rgba="0.7 0.7 0.7 0.9" mass="0.1"/>
+            <!-- <inertial pos="0 -0.015 0" mass="1" diaginertia="0.001 0.001 0.0001"/> -->
+            <site pos="0 0 0" name="trace_block"/>
+        </body>
+        <body name="goal" mocap="true" pos="0.0 0.0 0.009">
+          <geom class="goal" name="goal_bottom" type="box" pos="0 -0.03 0" size=".015 0.045 0.01"/>
+          <geom class="goal" name="goal_top" type="box" pos="0.0 0.03 0.0" size=".06 0.015 0.01"/>
+        </body>
+    </worldbody>
+    <actuator>
+        <position name="actuator_pusher_x" joint="slider_x" class="slider" />
+        <position name="actuator_pusher_y" joint="slider_y" class="slider" />
+    </actuator>
+    <sensor>
+        <framepos name="trace_pusher" objtype="site" objname="trace_pusher"/>
+        <framepos name="trace_block" objtype="site" objname="trace_block"/>
+    </sensor>
+</mujoco>
